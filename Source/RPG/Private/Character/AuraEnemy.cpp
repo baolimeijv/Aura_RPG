@@ -5,10 +5,11 @@
 #include"RPG/RPG.h"
 #include"AbilitySystemComponent.h"
 #include"AbilitySystem/AuraAttributeSet.h"
+#include"AbilitySystem/AuraAbilitySystemComponent.h"
 
 AAuraEnemy::AAuraEnemy()
 {
-	AbilitySystemComponent=CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent=CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
@@ -33,5 +34,11 @@ void AAuraEnemy::UnHighlightActor()
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	InitAbilityActorInfo();
+}
+
+void AAuraEnemy::InitAbilityActorInfo()
+{
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }
