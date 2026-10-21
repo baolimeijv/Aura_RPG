@@ -9,7 +9,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
-
+class UGameplayAbility;
 
 
 
@@ -35,5 +35,11 @@ protected:
 	TObjectPtr<UAttributeSet>AttributeSet;
 
 	virtual void InitAbilityActorInfo();
+
+	void AddCharacterAbilities();
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	
 };

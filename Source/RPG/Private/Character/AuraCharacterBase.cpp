@@ -1,4 +1,5 @@
 #include "Character/AuraCharacterBase.h"
+#include"AbilitySystem/AuraAbilitySystemComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -23,4 +24,12 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 
+}
+
+void AAuraCharacterBase::AddCharacterAbilities()
+{
+	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority())return;
+
+	AuraASC->AddCharacterAbilities(StartupAbilities);
 }
