@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include"GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -11,7 +12,9 @@ class UInputAction;
 struct FInputActionValue;
 class IEnemyInterface;
 class UAuraInputConfig;
-struct FGameplayTag;
+class UAuraAbilitySystemComponent;
+class USplineComponent;
+
 
 UCLASS()
 class RPG_API AAuraPlayerController : public APlayerController
@@ -37,10 +40,29 @@ private:
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
 
-	void AbilityInputPressed(FGameplayTag InputTag);
-	void AbilityInputReleased(FGameplayTag InputTag);
-	void AbilityInputHeld(FGameplayTag InputTag);
+	void AbilityInputPressed(const FInputActionValue& Value, FGameplayTag InputTag);
+	void AbilityInputReleased(const FInputActionValue& Value, FGameplayTag InputTag);
+	void AbilityInputHeld(const FInputActionValue& Value, FGameplayTag InputTag);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UAuraInputConfig> InputConfig;
+
+	UPROPERTY()
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
+
+	UAuraAbilitySystemComponent* GetASC();
+
+	FVector CachedDestination = FVector::ZeroVector;
+	float FollowTime = 0.f;
+	float ShortPressThreshold = 0.5f;
+	bool bAutoRunning = false;
+	bool bTargeting = false;
+	
+	UPROPERTY(VisibleAnywhere)
+	float AutoRunAcceptanceRadius = 50.f;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USplineComponent> Spline;
+
+	void AutoRun();
 };
