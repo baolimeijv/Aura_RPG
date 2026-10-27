@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include"AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include"Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
 class UAbilitySystemComponent;
@@ -12,9 +13,8 @@ class UAttributeSet;
 class UGameplayAbility;
 
 
-
 UCLASS(Abstract)
-class RPG_API AAuraCharacterBase : public ACharacter,public IAbilitySystemInterface
+class RPG_API AAuraCharacterBase : public ACharacter,public IAbilitySystemInterface,public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -27,6 +27,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent>Weapon;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName WeaponTipSocketName;
+
+	virtual FVector GetCombatSocketLocation()override;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent>AbilitySystemComponent;

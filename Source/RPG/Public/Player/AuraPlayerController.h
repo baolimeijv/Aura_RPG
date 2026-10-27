@@ -39,6 +39,7 @@ private:
 	void CursorTrace();
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
+	FHitResult CursorHit;
 
 	void AbilityInputPressed(const FInputActionValue& Value, FGameplayTag InputTag);
 	void AbilityInputReleased(const FInputActionValue& Value, FGameplayTag InputTag);
