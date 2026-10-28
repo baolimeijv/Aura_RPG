@@ -59,16 +59,14 @@ void AAuraPlayerController::AbilityInputReleased(const FInputActionValue& Value,
 		return;
 	}
 
-	if (bTargeting)
-	{
-		if (GetASC())GetASC()->AbilityInputTagReleased(InputTag);
-	}
-	else
+	if (GetASC())GetASC()->AbilityInputTagReleased(InputTag);
+
+	if (!bTargeting && !bShiftKeydown)
 	{
 		APawn* ControllerPawn = GetPawn();
-		if (FollowTime <= ShortPressThreshold&& ControllerPawn)
+		if (FollowTime <= ShortPressThreshold && ControllerPawn)
 		{
-			if(UNavigationPath*NavPath= UNavigationSystemV1::FindPathToLocationSynchronously(this,ControllerPawn->GetActorLocation(),CachedDestination))
+			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControllerPawn->GetActorLocation(), CachedDestination))
 			{
 				Spline->ClearSplinePoints();
 				for (const FVector& PointLoc : NavPath->PathPoints)
@@ -96,7 +94,7 @@ void AAuraPlayerController::AbilityInputHeld(const FInputActionValue& Value, FGa
 		return;
 	}
 
-	if (bTargeting)
+	if (bTargeting || bShiftKeydown)
 	{
 		if (GetASC())GetASC()->AbilityInputTagHeld(InputTag);
 	}
@@ -168,6 +166,8 @@ void AAuraPlayerController::SetupInputComponent()
 	UAuraEnhancedInputComponent* EnhancedInputComponent = CastChecked<UAuraEnhancedInputComponent>(InputComponent);
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+	EnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	EnhancedInputComponent->BindAbilityAction(InputConfig, this, &ThisClass::AbilityInputPressed, &ThisClass::AbilityInputReleased, &ThisClass::AbilityInputHeld);
 
 }
