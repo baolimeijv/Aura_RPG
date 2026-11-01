@@ -4,12 +4,13 @@
 #include"Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include"Components/AudioComponent.h"
+#include"AbilitySystemBlueprintLibrary.h"
+#include"AbilitySystemComponent.h"
 
 #include"RPG/RPG.h"
 
 AAuraProjectile::AAuraProjectile()
 {
-	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
@@ -58,6 +59,13 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActo
 
 	if (HasAuthority())
 	{
+		if (UAbilitySystemComponent*TargetASC=UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		{
+			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		}
+
+
+
 		Destroy();
 	}
 	else

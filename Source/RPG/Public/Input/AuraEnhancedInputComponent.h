@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
-#include"AuraInputConfig.h"
+#include"Input/AuraInputConfig.h"
 #include "AuraEnhancedInputComponent.generated.h"
 
 /**
