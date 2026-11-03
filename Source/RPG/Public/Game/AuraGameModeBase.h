@@ -6,12 +6,15 @@
 #include "GameFramework/GameModeBase.h"
 #include "AuraGameModeBase.generated.h"
 
-/**
- * 
- */
+class UCharacterClassesInfo;
+
+
 UCLASS()
 class RPG_API AAuraGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class Default")
+	TObjectPtr<UCharacterClassesInfo> CharacterClassInfo;
 };
