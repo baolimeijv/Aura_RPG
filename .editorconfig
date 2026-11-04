@@ -1,0 +1,14 @@
+root = true
+
+[*.{c,cc,cpp,cxx,h,hpp,hxx,inl,ipp}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+cpp_indent_style = tab
+cpp_indent_size = 4
+cpp_tab_width = 4
+resharper_cpp_indent_style = tab
+resharper_cpp_indent_size = 4
+resharper_cpp_tab_width = 4
+cpp_alignment_tab_fill_style = use_spaces
+resharper_cpp_alignment_tab_fill_style = use_spaces

@@ -29,17 +29,19 @@ public:
 
 	UFUNCTION(NetMulticast,Reliable)
 	virtual void MulticastHandleDeath();
-protected:
+	
 	virtual void BeginPlay() override;
-
+	
+	virtual FVector GetCombatSocketLocation()override;
+	
+protected:
+	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent>Weapon;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
-
-	virtual FVector GetCombatSocketLocation()override;
-
+	
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent>AbilitySystemComponent;
 

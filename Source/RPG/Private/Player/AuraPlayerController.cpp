@@ -8,11 +8,12 @@
 #include"Components/splinecomponent.h"
 #include <NavigationSystem.h>
 #include "NavigationPath.h"
+#include"GameFramework/Character.h"
+#include"UI/Widget/DamageTextComponent.h"
 
 
 AAuraPlayerController::AAuraPlayerController()
 {
-	//可复制的实体，用于服务器响应数据更新，并将这些更新复制给客户端
 	bReplicates = true;
 
 	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
@@ -25,6 +26,18 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	CursorTrace();
 	AutoRun();
 	
+}
+
+void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmout, ACharacter* TargetCharacter)
+{
+	if (IsValid(TargetCharacter) && DamageTextComponentClass && IsLocalController())
+	{
+		UDamageTextComponent* DamageText = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextComponentClass);
+		DamageText->RegisterComponent();
+		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		DamageText->SetDamageText(DamageAmout);
+	}
 }
 
 void AAuraPlayerController::CursorTrace()
