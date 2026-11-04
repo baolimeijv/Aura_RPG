@@ -17,6 +17,12 @@ public:
 	AAuraCharacter();
 	virtual void PossessedBy(AController* NewController)override;
 	virtual void OnRep_PlayerState()override;
+
+	//CombatInterface
+	virtual void Die()override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float LifeSpan = 5.f;
 private:
 	virtual void InitAbilityActorInfo()override;
 };
