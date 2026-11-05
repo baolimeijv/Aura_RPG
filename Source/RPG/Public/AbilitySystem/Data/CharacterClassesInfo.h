@@ -23,26 +23,29 @@ struct FCharacterClassDefaultInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
-	TSubclassOf<UGameplayEffect>PrimaryAttributes;
+	TSubclassOf<UGameplayEffect> PrimaryAttributes;
 };
 
 UCLASS()
 class RPG_API UCharacterClassesInfo : public UDataAsset
 {
 	GENERATED_BODY()
-public:
 
+public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
-	TSubclassOf<UGameplayEffect>SecondaryAttributes;
+	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
-	TSubclassOf<UGameplayEffect>VitalAttributes;
+	TSubclassOf<UGameplayEffect> VitalAttributes;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
-	TArray<TSubclassOf<UGameplayAbility>>CommonAbilities;
-	
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults|Damage")
+	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
+
 	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
 };

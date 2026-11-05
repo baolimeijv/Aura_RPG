@@ -12,3 +12,7 @@ resharper_cpp_indent_size = 4
 resharper_cpp_tab_width = 4
 cpp_alignment_tab_fill_style = use_spaces
 resharper_cpp_alignment_tab_fill_style = use_spaces
+resharper_cpp_keep_user_linebreaks = true
+resharper_cpp_wrap_arguments_style = wrap_if_long
+resharper_cpp_wrap_parameters_style = wrap_if_long
+max_line_length = 1000
