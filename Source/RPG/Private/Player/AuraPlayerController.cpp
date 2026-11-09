@@ -45,21 +45,29 @@ void AAuraPlayerController::CursorTrace()
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (!CursorHit.bBlockingHit)return;
 
-	LastActor = ThisActor;
-	ThisActor = Cast<IEnemyInterface>(CursorHit.GetActor());
+	AActor* const NewActor = CursorHit.GetActor();
 
-	if (LastActor != ThisActor)
+	if (LastActor.Get() != NewActor)
 	{
-		if (LastActor)LastActor->UnHighlightActor();
-		if (ThisActor)ThisActor->HighlightActor();
+		if (IEnemyInterface* LastEnemy = Cast<IEnemyInterface>(LastActor.Get()))
+		{
+			LastEnemy->UnHighlightActor();
+		}
+		if (IEnemyInterface* NewEnemy = Cast<IEnemyInterface>(NewActor))
+		{
+			NewEnemy->HighlightActor();
+		}
 	}
+
+	LastActor = NewActor;
+	ThisActor = NewActor;
 }
 
 void AAuraPlayerController::AbilityInputPressed(const FInputActionValue& Value, FGameplayTag InputTag)
 {
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		bTargeting = ThisActor ? true : false;
+		bTargeting = Cast<IEnemyInterface>(ThisActor.Get()) != nullptr;
 		bAutoRunning = false;
 	}
 }

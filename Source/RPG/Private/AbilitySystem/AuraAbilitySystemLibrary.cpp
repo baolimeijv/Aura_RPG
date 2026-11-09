@@ -8,6 +8,7 @@ void UAuraAbilitySystemLibrary::InitializedDefaultAttributes(const UObject* Worl
 	AActor* AvatarActor = ASC->GetAvatarActor();
 
 	UCharacterClassesInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if (!CharacterClassInfo)return;
 	FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
 	FGameplayEffectContextHandle PrimaryAttribnutesContextHandle = ASC->MakeEffectContext();
@@ -29,6 +30,7 @@ void UAuraAbilitySystemLibrary::InitializedDefaultAttributes(const UObject* Worl
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
 	UCharacterClassesInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if (!CharacterClassInfo)return;
 	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);

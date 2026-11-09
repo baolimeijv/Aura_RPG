@@ -43,6 +43,9 @@ public:
 	FGameplayTag InputTag_Passive_2;
 
 	FGameplayTag Damage;
+	
+	FGameplayTag Abilities_Fire_FireBolt;
+	FGameplayTag Cooldown_Fire_FireBolt;
 
 	FGameplayTag Effect_HitReact;
 private:

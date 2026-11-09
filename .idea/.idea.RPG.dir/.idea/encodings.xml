@@ -3,5 +3,6 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Source/RPG/Private/Character/AuraCharacter.cpp" charset="GBK" />
     <file url="file://$PROJECT_DIR$/Source/RPG/Private/Player/AuraPlayerController.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Source/RPG/Public/UI/WidgetController/OverlayWidgetController.h" charset="GBK" />
   </component>
 </project>

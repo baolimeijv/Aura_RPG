@@ -22,8 +22,7 @@ class RPG_API ICombatInterface
 	GENERATED_BODY() 
 
 public:
-	UFUNCTION(BlueprintNativeEvent)
-	int32 GetPlayerLevel();
+	virtual int32 GetPlayerLevel() = 0;
 	
 	virtual FVector GetCombatSocketLocation();
 

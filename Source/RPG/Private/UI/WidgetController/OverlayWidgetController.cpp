@@ -1,6 +1,8 @@
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include"AbilitySystem/AuraAttributeSet.h"
 #include"AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
+#include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -10,7 +12,6 @@ void UOverlayWidgetController::BroadcastInitialValues()
 	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
 	OnManaChanged.Broadcast(AuraAttributeSet->GetMana());
 	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
-
 }
 
 void UOverlayWidgetController::BindCallbackToDependencies()
@@ -19,37 +20,72 @@ void UOverlayWidgetController::BindCallbackToDependencies()
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda
 	(
-		[this](const FOnAttributeChangeData& data) {OnHealthChanged.Broadcast(data.NewValue); }
+		[this](const FOnAttributeChangeData& data) { OnHealthChanged.Broadcast(data.NewValue); }
 	);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute()).AddLambda
 	(
-		[this](const FOnAttributeChangeData& data) {OnMaxHealthChanged.Broadcast(data.NewValue); }
+		[this](const FOnAttributeChangeData& data) { OnMaxHealthChanged.Broadcast(data.NewValue); }
 	);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetManaAttribute()).AddLambda
 	(
-		[this](const FOnAttributeChangeData& data) {OnManaChanged.Broadcast(data.NewValue); }
+		[this](const FOnAttributeChangeData& data) { OnManaChanged.Broadcast(data.NewValue); }
 	);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute()).AddLambda
 	(
-		[this](const FOnAttributeChangeData& data) {OnMaxManaChanged.Broadcast(data.NewValue); }
+		[this](const FOnAttributeChangeData& data) { OnMaxManaChanged.Broadcast(data.NewValue); }
 	);
 
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda
-	(
-		[this](const FGameplayTagContainer AssetTags)
+	if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		if (AuraASC->bStartupAbilitiesGiven)
 		{
-			for (const FGameplayTag& tag : AssetTags)
+			OnIntializeStartupAbilities(AuraASC);
+		}
+		else
+		{
+			AuraASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnIntializeStartupAbilities);
+		}
+
+		AuraASC->EffectAssetTags.AddLambda
+		(
+			[this](const FGameplayTagContainer AssetTags)
 			{
-				FGameplayTag MessageTag=FGameplayTag::RequestGameplayTag(FName("Message"));
-				if (tag.MatchesTag(MessageTag))
+				for (const FGameplayTag& tag : AssetTags)
 				{
-					const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, tag);
-					MessageWidgetRowDelegate.Broadcast(*Row);
+					FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+					if (tag.MatchesTag(MessageTag))
+					{
+						const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, tag);
+						MessageWidgetRowDelegate.Broadcast(*Row);
+					}
 				}
 			}
-		}
-	);
-
+		);
+	}
 }
 
+void UOverlayWidgetController::OnIntializeStartupAbilities(UAuraAbilitySystemComponent* AuraAbilitySystemComponent)
+{
+	if (!AuraAbilitySystemComponent)return;
 
+	FForEachAbility BroadcastDelegate;
+	BroadcastDelegate.BindLambda
+	(
+		[this,AuraAbilitySystemComponent](const FGameplayAbilitySpec& AbilitySpec)
+		{
+			FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AuraAbilitySystemComponent->GetAbilityTagFormSpec(AbilitySpec));
+
+			FGameplayTag InputTag = AuraAbilitySystemComponent->GetInputTagFromSpec(AbilitySpec);
+			if (!InputTag.IsValid())
+			{
+				if (const UAuraGameplayAbility* AuraAbility = Cast<UAuraGameplayAbility>(AbilitySpec.Ability))
+				{
+					InputTag = AuraAbility->StartupInputTag;
+				}
+			}
+			Info.InputTag = InputTag;
+			AbilityInfoDelegate.Broadcast(Info);
+		}
+	);
+	AuraAbilitySystemComponent->ForEachAbility(BroadcastDelegate);
+}
