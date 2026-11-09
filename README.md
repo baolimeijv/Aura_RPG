@@ -42,6 +42,14 @@ Widget 不直接持有 ASC，也不直接读属性，只从 WidgetController 拿
 初值在初始化时主动 pull，后续变化由 Controller 把 ASC 的委托转发给 Widget（push）。
 UI 与 GAS 因此完全解耦，更换 UI 不需要改动任何战斗代码。
 
+## 操作
+
+| 输入 | 功能 |
+|---|---|
+| W / A / S / D | 角色移动 |
+| 鼠标点击地面 | 点击寻路移动（光标命中驱动） |
+| 技能按键 | 由 InputConfig DataAsset 配置，用 GameplayTag 绑定到技能 |
+
 ## 项目结构
 
 ```
