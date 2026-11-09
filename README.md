@@ -58,7 +58,3 @@ Source/RPG/
 │   └── UI/                        # HUD / Widget / WidgetController
 └── Private/                       # 实现（结构与 Public 对应）
 ```
-
-## 后续计划
-
-经验升级系统（XP / 升级 / 属性点）与减益系统（Debuff：灼烧 / 减速 / 击退）。
