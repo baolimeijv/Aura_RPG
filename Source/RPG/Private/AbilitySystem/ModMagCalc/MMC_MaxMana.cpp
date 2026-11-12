@@ -1,4 +1,4 @@
-#include "AbilitySystem/ModMagCalc/MMC_MaxMana.h"
+﻿#include "AbilitySystem/ModMagCalc/MMC_MaxMana.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Interaction/CombatInterface.h"
 
@@ -26,10 +26,14 @@ float UMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGameplayEffectS
 	Int = FMath::Max<float>(Int, 0.f);
 
 	int32 PlayerLevel = 1;
-	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetSourceObject()))
+	ICombatInterface* CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetEffectCauser());
+	if (!CombatInterface) CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetSourceObject());
+	if (!CombatInterface) CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetInstigator());
+	if (CombatInterface)
 	{
 		PlayerLevel = CombatInterface->GetPlayerLevel();
 	}
+	UE_LOG(LogTemp, Warning, TEXT("[MMC] PlayerLevel=%d"), PlayerLevel);
 	
 	return 50.f + 2.5f * Int + 15.f * PlayerLevel;
 }

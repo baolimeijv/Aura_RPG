@@ -1,4 +1,4 @@
-#include "AbilitySystem/ModMagCalc/MMC_MaxHealth.h"
+﻿#include "AbilitySystem/ModMagCalc/MMC_MaxHealth.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Interaction/CombatInterface.h"
 
@@ -26,10 +26,12 @@ float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 	Vigor = FMath::Max<float>(Vigor, 0.f);
 
 	int32 PlayerLevel = 1;
-	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetSourceObject()))
+	ICombatInterface* CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetEffectCauser());
+	if (!CombatInterface) CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetSourceObject());
+	if (!CombatInterface) CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetInstigator());
+	if (CombatInterface)
 	{
 		PlayerLevel = CombatInterface->GetPlayerLevel();
 	}
-
 	return 80.f + 2.5f * Vigor + 10.f * PlayerLevel;
 }

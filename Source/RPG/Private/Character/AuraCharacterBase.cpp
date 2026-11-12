@@ -1,5 +1,6 @@
-#include "Character/AuraCharacterBase.h"
+﻿#include "Character/AuraCharacterBase.h"
 #include"AbilitySystem/AuraAbilitySystemComponent.h"
+#include"AbilitySystem/AuraAttributeSet.h"
 #include"Components/CapsuleComponent.h"
 #include"RPG/RPG.h"
 
@@ -82,6 +83,12 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+
+	if (UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))
+	{
+		AuraAS->SetHealth(AuraAS->GetMaxHealth());
+		AuraAS->SetMana(AuraAS->GetMaxMana());
+	}
 }
 
 int32 AAuraCharacterBase::GetPlayerLevel()

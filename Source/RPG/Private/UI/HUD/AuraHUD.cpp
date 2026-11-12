@@ -1,7 +1,5 @@
 #include "UI/HUD/AuraHUD.h"
 #include"UI/Widget/AuraUserWidget.h"
-#include"AbilitySystemComponent.h"
-#include"AttributeSet.h"
 #include"UI/WidgetController/OverlayWidgetController.h"
 
 UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
@@ -22,8 +20,7 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	checkf(OverlayWidgetClass, TEXT("OverlayWidgetClass Uninitialize,please fill out BP_AuraHUD"));
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass Uninitialize,please fill out BP_AuraHUD"));
 
-	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass);
-	OverlayWidget = Cast<UAuraUserWidget>(Widget);
+	OverlayWidget = CreateWidget<UAuraUserWidget>(GetWorld(), OverlayWidgetClass);
 
 	const FWidgetControllerParams WCParams(PC, PS, ASC, AS);
 	GetOverlayWidgetController(WCParams);

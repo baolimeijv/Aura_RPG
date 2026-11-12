@@ -23,7 +23,8 @@ public:
 };
 
 template<class UserClass, typename PressedFunctype, typename RealseFunctype, typename HeldFunctype>
-inline void UAuraEnhancedInputComponent::BindAbilityAction(const UAuraInputConfig* InputConfig, UserClass* Object, PressedFunctype PressedFunc, RealseFunctype RealseFunc, HeldFunctype HeldFunc)
+inline void UAuraEnhancedInputComponent::BindAbilityAction(const UAuraInputConfig* InputConfig, UserClass* Object, PressedFunctype PressedFunc,
+RealseFunctype RealseFunc, HeldFunctype HeldFunc)
 {
 	check(InputConfig);
 

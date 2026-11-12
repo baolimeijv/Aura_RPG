@@ -1,7 +1,8 @@
-#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+﻿#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include"AbilitySystemComponent.h"
 #include"Game/AuraGameModeBase.h"
+#include"AbilitySystem/AuraAttributeSet.h"
 
 void UAuraAbilitySystemLibrary::InitializedDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
 {
@@ -25,6 +26,12 @@ void UAuraAbilitySystemLibrary::InitializedDefaultAttributes(const UObject* Worl
 	VitalAttribnutesContextHandle.AddSourceObject(AvatarActor);
 	FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->VitalAttributes, Level, VitalAttribnutesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
+
+	if (UAuraAttributeSet* AuraAS = const_cast<UAuraAttributeSet*>(ASC->GetSet<UAuraAttributeSet>()))
+	{
+		AuraAS->SetHealth(AuraAS->GetMaxHealth());
+		AuraAS->SetMana(AuraAS->GetMaxMana());
+	}
 }
 
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)

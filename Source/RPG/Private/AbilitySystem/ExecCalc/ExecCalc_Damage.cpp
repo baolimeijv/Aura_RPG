@@ -1,4 +1,4 @@
-#include "AbilitySystem/ExecCalc/ExecCalc_Damage.h"
+﻿#include "AbilitySystem/ExecCalc/ExecCalc_Damage.h"
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
@@ -98,20 +98,23 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	float TargetCriticalHitResistance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitResistanceDef, EvaluateParameters, TargetCriticalHitResistance);
-	SourceCriticalHitChance = FMath::Max<float>(TargetCriticalHitResistance, 0.f);
+	TargetCriticalHitResistance = FMath::Max<float>(TargetCriticalHitResistance, 0.f);
 
 	float SourceCriticalHitDamage = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitDamageDef, EvaluateParameters, SourceCriticalHitDamage);
-	SourceCriticalHitChance = FMath::Max<float>(SourceCriticalHitDamage, 0.f);
+	SourceCriticalHitDamage = FMath::Max<float>(SourceCriticalHitDamage, 0.f);
 
-	const FRealCurve* CriticalHitResistanceCurve =CharacterClassesInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"),FString());
-	const float CriticalHitResistanceCoefficient=CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+	const FRealCurve* CriticalHitResistanceCurve = CharacterClassesInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString());
+	if (!CriticalHitResistanceCurve) return;
+	
+	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
 	
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
 	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
 
 	Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;
 
+	Damage = FMath::Max(Damage, 0.f);
 	FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
